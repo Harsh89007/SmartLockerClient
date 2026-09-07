@@ -37,7 +37,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity 
+            android:name=".LockScreenActivity"
+            android:launchMode="singleTask"
+            android:excludeFromRecents="true"
+            android:exported="false" />
+        
         <!-- (Device Admin और Background Service हम अगले स्टेप में यहाँ जोड़ेंगे) -->
 
     </application>
