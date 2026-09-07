@@ -4,11 +4,13 @@
     <!-- क्लाइंट ऐप के लिए ज़रूरी परमिशंस -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- QR स्कैन के लिए -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- IMEI निकालने के लिए -->
     
-    <!-- बैकग्राउंड में चलने और फोन लॉक करने के लिए -->
+    <!-- बैकग्राउंड सर्विस और लॉक स्क्रीन के लिए -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- स्क्रीन के ऊपर लॉक दिखाने के लिए -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
@@ -17,20 +19,8 @@
         android:roundIcon="@android:drawable/sym_def_app_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-                <!-- बैकग्राउंड सर्विस -->
-        <service 
-            android:name=".LockService" 
-            android:exported="false" />
 
-        <!-- फोन रीस्टार्ट होने पर काम करने वाला रिसीवर -->
-        <receiver 
-            android:name=".BootReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-        
+        <!-- Device Admin Receiver -->
         <receiver 
             android:name=".MyAdminReceiver"
             android:permission="android.permission.BIND_DEVICE_ADMIN"
@@ -42,23 +32,36 @@
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
             </intent-filter>
         </receiver>
-        
-        <!-- यह मेन एक्टिविटी है जो ऐप खुलने पर दिखेगी -->
+
+        <!-- Main Activity (यहाँ QR स्कैनर खुलेगा) -->
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Lock Screen Activity -->
         <activity 
             android:name=".LockScreenActivity"
             android:launchMode="singleTask"
             android:excludeFromRecents="true"
             android:exported="false" />
-        
-        <!-- (Device Admin और Background Service हम अगले स्टेप में यहाँ जोड़ेंगे) -->
+
+        <!-- Background Lock Service -->
+        <service 
+            android:name=".LockService" 
+            android:exported="false" />
+
+        <!-- Boot Receiver (फोन चालू होते ही सर्विस स्टार्ट करने के लिए) -->
+        <receiver 
+            android:name=".BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 
 </manifest>
-
