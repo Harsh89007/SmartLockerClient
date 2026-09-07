@@ -36,8 +36,11 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
     
-    // Firebase BoM (Bill of Materials) - तेरे स्क्रीनशॉट वाली सारी फाइलें यहीं से आएंगी
+    // Firebase
     implementation platform('com.google.firebase:firebase-bom:32.8.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-database-ktx' // Realtime Database के लिए
+    implementation 'com.google.firebase:firebase-database-ktx'
+    
+    // QR Code Scanner (ZXing)
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
 }
