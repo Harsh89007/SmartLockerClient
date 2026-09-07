@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- क्लाइंट ऐप के लिए ज़रूरी परमिशंस -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CAMERA" /> <!-- QR स्कैन के लिए -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- IMEI निकालने के लिए -->
-    
-    <!-- बैकग्राउंड सर्विस और लॉक स्क्रीन के लिए -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -33,7 +30,7 @@
             </intent-filter>
         </receiver>
 
-        <!-- Main Activity (यहाँ QR स्कैनर खुलेगा) -->
+        <!-- Main QR Scanner Activity -->
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,19 +38,19 @@
             </intent-filter>
         </activity>
 
-        <!-- Lock Screen Activity -->
+        <!-- Fullscreen Lock Screen -->
         <activity 
             android:name=".LockScreenActivity"
             android:launchMode="singleTask"
             android:excludeFromRecents="true"
             android:exported="false" />
 
-        <!-- Background Lock Service -->
+        <!-- Background 24/7 Lock Service -->
         <service 
             android:name=".LockService" 
             android:exported="false" />
 
-        <!-- Boot Receiver (फोन चालू होते ही सर्विस स्टार्ट करने के लिए) -->
+        <!-- Boot Receiver -->
         <receiver 
             android:name=".BootReceiver"
             android:exported="true">
