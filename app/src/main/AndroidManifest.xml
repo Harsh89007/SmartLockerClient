@@ -17,6 +17,19 @@
         android:roundIcon="@android:drawable/sym_def_app_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+                <!-- बैकग्राउंड सर्विस -->
+        <service 
+            android:name=".LockService" 
+            android:exported="false" />
+
+        <!-- फोन रीस्टार्ट होने पर काम करने वाला रिसीवर -->
+        <receiver 
+            android:name=".BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
         
         <receiver 
             android:name=".MyAdminReceiver"
