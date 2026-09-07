@@ -17,7 +17,6 @@
         android:background="#0F2445"
         android:layout_alignParentTop="true"/>
 
-    <!-- QR Scanner View -->
     <com.journeyapps.barcodescanner.DecoratedBarcodeView
         android:id="@+id/barcode_scanner"
         android:layout_width="match_parent"
@@ -29,7 +28,7 @@
         android:id="@+id/tvStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Waiting for Device Owner Permission..."
+        android:text="Initializing Scanner..."
         android:textColor="#FFEB3B"
         android:textSize="14sp"
         android:gravity="center"
